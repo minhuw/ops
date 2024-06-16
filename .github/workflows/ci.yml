@@ -1,0 +1,20 @@
+---
+    name: CI
+    on: [ workflow_dispatch, push ]
+    jobs:
+        nix-channel-deploy:
+            runs-on: ubuntu-latest
+            steps:
+                - uses: actions/checkout@v4
+                - uses: awalsh128/cache-apt-pkgs-action@latest
+                  with:
+                    packages: pandoc
+                    version: 1.0
+                - run: ./pack.sh
+                - name: Publish to Cloudflare Pages
+                  uses: cloudflare/pages-action@v1
+                  with:
+                    apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+                    accountId: c2f0e99876cfe8163cba7124183375a6
+                    projectName: constellation
+                    directory: _output
