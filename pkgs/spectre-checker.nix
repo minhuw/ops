@@ -7,8 +7,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner = "speed47";
     repo = "spectre-meltdown-checker";
-    rev = "bd0c7c94b5dded3b3178620fc8d166f98cdf503d";
-    sha256 = "sha256-hVezGMyujSdeljitsXLNMVZvSc00UTEqmC+tm/9C6nM=";
+    rev = "34c6095912d115551f69435a55d6e0445932fdf9";
+    sha256 = "sha256-m0f0+AFPrB2fPNd1SkSj6y9PElTdefOdI51Jgfi816w=";
   };
 
   installPhase = ''
