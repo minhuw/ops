@@ -16,6 +16,13 @@
     packages = forAllSystems (system:
       import ./default.nix {
         pkgs = import nixpkgs {inherit system;};
-      });
+      }
+    );
+    apps = forAllSystems (system: {
+      gro-dist = {
+        type = "app";
+        program = "${self.packages.${system}.gro_dist}/bin/gro_dist";
+      };
+    });
   };
 }
