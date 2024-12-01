@@ -23,6 +23,10 @@
         type = "app";
         program = "${self.packages.${system}.gro_dist}/bin/gro_dist";
       };
+      gro-ldist = {
+        type = "app";
+        program = "${self.packages.${system}.gro_ldist}/bin/gro_ldist";
+      };
     });
   };
 }

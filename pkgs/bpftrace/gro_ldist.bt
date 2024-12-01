@@ -1,0 +1,35 @@
+#!/usr/bin/bpftrace
+
+BEGIN
+{
+    printf("Tracing GRO packet size distributions... Hit Ctrl-C to end.\n");
+}
+
+kfunc:tcp_v4_rcv
+{
+    $len = args->skb->len;
+    @pkt_size = lhist($len, 0, 65536, 4096);
+    // Also track some basic statistics
+    @pkt_count++;
+    @total_bytes += $len;
+}
+
+interval:s:10
+{
+    printf("\n=== Packet Statistics (10s interval) ===\n");
+    printf("Total packets: %d\n", @pkt_count);
+    printf("Total bytes: %d\n", @total_bytes);
+    printf("\nPacket size distribution:\n");
+    print(@pkt_size);
+    clear(@pkt_count);
+    clear(@total_bytes);
+    clear(@pkt_size);
+}
+
+END
+{
+    clear(@pkt_count);
+    clear(@total_bytes);
+    clear(@pkt_size);
+    printf("\nTracing ended.\n");
+}

@@ -7,5 +7,6 @@
   pqrs = pkgs.callPackage ./pkgs/pqrs.nix { };
   fio = pkgs.callPackage ./pkgs/fio.nix { };
   inherit (pkgs.callPackage ./pkgs/bpftrace/bpftrace.nix { })
-    gro_dist;
+    gro_dist
+    gro_ldist;
 }
