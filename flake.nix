@@ -27,6 +27,10 @@
         type = "app";
         program = "${self.packages.${system}.gro_ldist}/bin/gro_ldist";
       };
+      recv-dist = {
+        type = "app";
+        program = "${self.packages.${system}.recv_dist}/bin/recv_dist";
+      };
     });
   };
 }

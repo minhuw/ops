@@ -1,0 +1,45 @@
+#!/usr/bin/bpftrace
+
+BEGIN
+{
+    printf("Analyzing TCP receive path (tcp_recvmsg)...\n");
+    printf("Hit Ctrl-C to end.\n");
+}
+
+// Entry to tcp_recvmsg
+kprobe:tcp_recvmsg
+{
+    @start[tid] = nsecs;
+}
+
+// Return from tcp_recvmsg
+kretprobe:tcp_recvmsg
+{
+    $delta = nsecs - @start[tid];
+    if (@start[tid] != 0) {
+        // Distribution of return values (bytes received)
+        @tcp_recv_bytes = hist(retval);
+        
+        // Distribution of latencies
+        @tcp_recv_latency = hist($delta / 1000);  // Convert to microseconds
+        
+        delete(@start[tid]);
+    }
+}
+
+
+interval:s:15
+{
+    printf("\n=== TCP Receive Statistics ===\n");
+    
+    printf("\nBytes received distribution:\n");
+    print(@tcp_recv_bytes);
+    
+    printf("\nLatency distribution (microseconds):\n");
+    print(@tcp_recv_latency);
+    
+    // Cleanup
+    clear(@tcp_recv_bytes);
+    clear(@tcp_recv_latency);
+    clear(@start);
+}
