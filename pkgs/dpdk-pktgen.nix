@@ -36,7 +36,7 @@ let
   };
 in
 stdenv.mkDerivation {
-  pname = "dpdk-pktgen";
+  pname = "pktgen";
   version = "24.05.5";
 
   buildInputs = [
