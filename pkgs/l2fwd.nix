@@ -12,8 +12,11 @@ stdenv.mkDerivation {
 
   buildInputs = [
     numactl
-    rdma-core
     libpcap
+  ];
+
+  propagatedBuildInputs = [
+    rdma-core
   ];
 
   nativeBuildInputs = [
