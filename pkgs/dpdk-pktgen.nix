@@ -2,13 +2,13 @@
 let 
   dpdk = stdenv.mkDerivation {
     pname = "dpdk";
-    version = "24.05";
+    version = "24.11";
 
     src = fetchFromGitHub {
       owner = "dpdk";
       repo = "dpdk";
-      rev = "v24.03";
-      sha256 = "sha256-BaGBi/EVSOR0abiMKhLUQIK/TZUYm4vLl9a5TGtSUvo=";
+      rev = "v24.11";
+      sha256 = "sha256-KN7OKulZIfj+juo8TxYrMvGqsdL2tW/nEGkKjAB9HBY=";
     };
 
     buildInputs = [
@@ -40,7 +40,7 @@ let
 in
 stdenv.mkDerivation {
   pname = "pktgen";
-  version = "24.05.5";
+  version = "24.10.3";
 
   buildInputs = [
     libbsd
@@ -64,8 +64,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "pktgen";
     repo = "Pktgen-DPDK";
-    rev = "f53800db12a81c5552606c126f65b0b3a3d943a0";
-    sha256 = "sha256-SGvYl51owTkenXAJIBNpn+EdGluxm8omGt5VQpTxW7g=";
+    rev = "12fb93c72d57288b8b77cf628e15de96292358eb";
+    sha256 = "sha256-6KC1k+LWNSU/mdwcUKjCaq8pGOcO+dFzeXX4PJm0QgE=";
   };
 
   postPatch = ''
