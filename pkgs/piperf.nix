@@ -11,6 +11,7 @@ piperf = pkgs.writeScriptBin "piperf" ''
   START_PORT=5201
   NUM_INSTANCES=4
   SERVER_IP="localhost"
+  BIND_IP="0.0.0.0"
   DURATION=30
   MODE="client"  # can be "server" or "client"
   WINDOW_SIZE=""
@@ -24,10 +25,10 @@ piperf = pkgs.writeScriptBin "piperf" ''
 
   # Help function
   show_help() {
-      echo "Usage: $0 [--server|--client SERVER_IP] [OPTIONS]"
+      echo "Usage: $0 [--server <BIND_IP>|--client SERVER_IP] [OPTIONS]"
       echo "Options:"
       echo "  --help                Show this help message"
-      echo "  --server              Run in server mode"
+      echo "  --server BIND_IP      Run in server mode"
       echo "  --client SERVER_IP    Run in client mode (specify server IP)"
       echo "  --port PORT           Starting port number (default: 5201)"
       echo "  --instances NUM       Number of parallel instances (default: 4)"
@@ -44,7 +45,7 @@ piperf = pkgs.writeScriptBin "piperf" ''
 
   # Use enhanced getopt
   if ! ARGS=$(${pkgs.util-linux}/bin/getopt -o h \
-      --long help,server,client:,port:,instances:,time:,window:,buffer:,length:,directory:,affinity:,iperf:,control-fd:,extra-args: \
+      --long help,server:,client:,port:,instances:,time:,window:,buffer:,length:,directory:,affinity:,iperf:,control-fd:,extra-args: \
       -n "$0" -- "$@"); then
       echo "Error parsing arguments" >&2
       exit 1
@@ -61,7 +62,8 @@ piperf = pkgs.writeScriptBin "piperf" ''
               ;;
           --server)
               MODE="server"
-              shift
+              BIND_IP="$2"
+              shift 2
               ;;
           --client)
               MODE="client"
@@ -151,6 +153,10 @@ piperf = pkgs.writeScriptBin "piperf" ''
               core=''${CORE_ARRAY[$core_index]}
               echo "Pinning iperf3 server instance $i to CPU core $core"
               cmd="$cmd -A $core"
+          fi
+
+          if [ -n "$BIND_IP" ]; then
+              cmd="$cmd --bind $BIND_IP"
           fi
 
           cmd="$cmd -- "
