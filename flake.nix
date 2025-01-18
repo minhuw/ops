@@ -31,6 +31,10 @@
         type = "app";
         program = "${self.packages.${system}.recv_dist}/bin/recv_dist";
       };
+      napi-dist = {
+        type = "app";
+        program = "${self.packages.${system}.napi_dist}/bin/napi_dist";
+      };
     });
   };
 }

@@ -12,5 +12,6 @@
   inherit (pkgs.callPackage ./pkgs/bpftrace/bpftrace.nix { })
     gro_dist
     gro_ldist
-    recv_dist;
+    recv_dist
+    napi_dist;
 }

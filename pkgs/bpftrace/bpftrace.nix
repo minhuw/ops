@@ -12,4 +12,8 @@
     #!${stdenv.shell}
     exec sudo ${bpftrace}/bin/bpftrace ${./recv_dist.bt} "$@"
   '';
+  napi_dist = writeScriptBin "napi_dist" ''
+    #!${stdenv.shell}
+    exec sudo ${bpftrace}/bin/bpftrace ${./napi_dist.bt} "$@"
+  '';
 }

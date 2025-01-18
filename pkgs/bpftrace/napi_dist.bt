@@ -1,0 +1,46 @@
+#!/usr/bin/env bpftrace
+
+BEGIN
+{
+    printf("Analyzing TCP receive path (NAPI)...\n");
+    printf("Hit Ctrl-C to end.\n");
+}
+
+tracepoint:napi:napi_poll
+{
+    @start[tid] = args->work;
+    @napi[tid] = args->napi;
+}
+
+
+kretprobe:__napi_poll
+/@start[tid]/
+{
+    $napi = @napi[tid];
+    $budget_used = retval;  // work done returned by poll function
+
+    @used_budget[$napi] = lhist($budget_used, 0, 128, 16);
+    @poll_count[$napi] = count();
+
+    delete(@start[tid]);
+    delete(@napi[tid]);
+}
+
+interval:s:1
+{
+    time("%H:%M:%S Used budget distribution by NAPI instance:\n");
+    print(@used_budget);
+    printf("\nPoll count by NAPI instance:\n");
+    print(@poll_count);
+    printf("\n");
+    clear(@used_budget);
+    clear(@poll_count);
+}
+
+END
+{
+    clear(@start);
+    clear(@napi);
+    clear(@used_budget);
+    clear(@poll_count);
+}
