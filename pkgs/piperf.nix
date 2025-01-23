@@ -18,6 +18,7 @@ piperf = pkgs.writeScriptBin "piperf" ''
   BUFFER_SIZE=""
   LENGTH=""
   EXTRA_ARGS=""
+  FQ_RATE=""
   WORKING_DIR="$(pwd)"
   CPU_CORES=""  # Comma-separated list of CPU cores
   IPERF_BIN="${pkgs.iperf3}/bin/iperf3"  # Default iperf3 binary path
@@ -35,6 +36,7 @@ piperf = pkgs.writeScriptBin "piperf" ''
       echo "  --time SECONDS        Test duration in seconds (default: 30)"
       echo "  --window SIZE         Set window size (optional, format: n[KMG])"
       echo "  --buffer SIZE         Set buffer length (optional, format: n[KMG])"
+      echo "  --fqrate RATE         Set FQ rate (optional, format: n[KMG])"
       echo "  --length BYTES        Set test length in bytes (optional, format: n[KMG])"
       echo "  --directory PATH      Set working directory (default: current directory)"
       echo "  --affinity CORES      Comma-separated list of CPU cores to use (e.g., '0,2,4,6')"
@@ -45,7 +47,7 @@ piperf = pkgs.writeScriptBin "piperf" ''
 
   # Use enhanced getopt
   if ! ARGS=$(${pkgs.util-linux}/bin/getopt -o h \
-      --long help,server:,client:,port:,instances:,time:,window:,buffer:,length:,directory:,affinity:,iperf:,control-fd:,extra-args: \
+      --long help,server:,client:,port:,instances:,time:,window:,buffer:,fqrate:,length:,directory:,affinity:,iperf:,control-fd:,extra-args: \
       -n "$0" -- "$@"); then
       echo "Error parsing arguments" >&2
       exit 1
@@ -88,6 +90,10 @@ piperf = pkgs.writeScriptBin "piperf" ''
               ;;
           --buffer)
               BUFFER_SIZE="$2"
+              shift 2
+              ;;
+          --fqrate)
+              FQ_RATE="$2"
               shift 2
               ;;
           --length)
@@ -189,6 +195,7 @@ piperf = pkgs.writeScriptBin "piperf" ''
           [[ -n "$WINDOW_SIZE" ]] && cmd="$cmd -w $WINDOW_SIZE"
           [[ -n "$BUFFER_SIZE" ]] && cmd="$cmd -l $BUFFER_SIZE"
           [[ -n "$LENGTH" ]] && cmd="$cmd -n $LENGTH"
+          [[ -n "$FQ_RATE" ]] && cmd="$cmd --fq-rate $FQ_RATE"
 
           # Apply CPU affinity if cores are specified
           if [ -n "$CPU_CORES" ]; then
