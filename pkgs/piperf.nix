@@ -41,13 +41,12 @@ piperf = pkgs.writeScriptBin "piperf" ''
       echo "  --directory PATH      Set working directory (default: current directory)"
       echo "  --affinity CORES      Comma-separated list of CPU cores to use (e.g., '0,2,4,6')"
       echo "  --iperf PATH          Path to iperf3 binary (default: $IPERF_BIN)"
-      echo "  --control-fd FD       Control file descriptor (only applies to first instance)"
       echo "  --extra-args EXTRA    Extra arguments"
   }
 
   # Use enhanced getopt
   if ! ARGS=$(${pkgs.util-linux}/bin/getopt -o h \
-      --long help,server:,client:,port:,instances:,time:,window:,buffer:,fqrate:,length:,directory:,affinity:,iperf:,control-fd:,extra-args: \
+      --long help,server:,client:,port:,instances:,time:,window:,buffer:,fqrate:,length:,directory:,affinity:,iperf:,extra-args: \
       -n "$0" -- "$@"); then
       echo "Error parsing arguments" >&2
       exit 1
@@ -112,10 +111,6 @@ piperf = pkgs.writeScriptBin "piperf" ''
               IPERF_BIN="$2"
               shift 2
               ;;
-          --control-fd)
-              CONTROL_FD="$2"
-              shift 2
-              ;;
           --extra-args)
               EXTRA_ARGS="$2"
               shift 2
@@ -165,13 +160,6 @@ piperf = pkgs.writeScriptBin "piperf" ''
               cmd="$cmd --bind $BIND_IP"
           fi
 
-          cmd="$cmd -- "
-
-          # Add control-fd option only to first instance
-          if [ $i -eq 0 ] && [ -n "$CONTROL_FD" ]; then
-              cmd="$cmd --control-fd $CONTROL_FD"
-          fi
-
           cmd="$cmd -- $EXTRA_ARGS"
 
           echo "$cmd"
@@ -203,13 +191,6 @@ piperf = pkgs.writeScriptBin "piperf" ''
               core=''${CORE_ARRAY[$core_index]}
               echo "Pinning iperf3 client instance $i to CPU core $core"
               cmd="$cmd -A $core"
-          fi
-          
-          cmd="$cmd -- "
-
-          # Add control-fd option only to first instance
-          if [ $i -eq 0 ] && [ -n "$CONTROL_FD" ]; then
-              cmd="$cmd --control-fd $CONTROL_FD"
           fi
 
           cmd="$cmd -- $EXTRA_ARGS"
