@@ -1,0 +1,13 @@
+diff --git a/sbin/common_irq_affinity.sh b/sbin/common_irq_affinity.sh
+index 605f3df..ad54027 100755
+--- a/sbin/common_irq_affinity.sh
++++ b/sbin/common_irq_affinity.sh
+@@ -57,7 +57,7 @@ function get_irq_list
+ 	infiniband_device_irqs_path="/sys/class/infiniband/$interface/device/msi_irqs"
+ 	net_device_irqs_path="/sys/class/net/$interface/device/msi_irqs"
+ 	interface_in_proc_interrupts=$(grep -P "$interface[^0-9,a-z,A-Z]" /proc/interrupts | cut -d":" -f1)
+-	pci_in_proc_interrupts=$(grep "$pci_dev" /proc/interrupts | grep -v "async" | cut -d":" -f1)
++	pci_in_proc_interrupts=$(grep "$pci_dev" /proc/interrupts | grep -v "async" | grep -v "pages_eq" | grep -v "cmd_eq" | cut -d":" -f1)
+ 
+ 	if [ -d "$infiniband_device_irqs_path" ]; then
+ 		irq_list=$(/bin/ls -1 "$infiniband_device_irqs_path" | tail -n +2)

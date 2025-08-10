@@ -1,0 +1,16 @@
+diff --git a/sbin/set_irq_affinity_cpulist.sh b/sbin/set_irq_affinity_cpulist.sh
+index f218d9b..4dfdc73 100755
+--- a/sbin/set_irq_affinity_cpulist.sh
++++ b/sbin/set_irq_affinity_cpulist.sh
+@@ -84,7 +84,10 @@ do
+ 	        affinity=$( core_to_affinity $core_id )
+ 	        set_irq_affinity $IRQ $affinity
+ 	fi
+-	I=$(( (I%CORES) + 1 ))
++	I=$(( I + 1 ))
++	if [[ $I -gt $CORES ]]; then
++		break
++	fi
+ done
+ echo
+ echo done.
