@@ -12,6 +12,7 @@
   gapbs = pkgs.callPackage ./pkgs/gapbs.nix { };
   osjitter = pkgs.callPackage ./pkgs/osjitter.nix { };
   mlx-tool = pkgs.callPackage ./pkgs/mlx-tool/mlx-tool.nix { };
+  toplev = pkgs.callPackage ./pkgs/toplev/toplev.nix { };
   inherit (pkgs.callPackage ./pkgs/bpftrace/bpftrace.nix { })
     gro_dist
     gro_ldist
