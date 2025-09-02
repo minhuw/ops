@@ -8,8 +8,8 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     owner = "minhuw";
     repo = "pmu-tools";
-    rev = "4a1384f123ee680406697785548a70e40ec5e63a";
-    sha256 = "sha256-mQrZrxhBrqzrVIlBKLczt+/0woa0idRfG8qoZuLWZko=";
+    rev = "55f44aaef0658adb858b76dc7491de94ed90cc1e";
+    sha256 = "sha256-NkxpIj/22C2Y9tBohn6YmW/rsd4/3bnY78VBSM7hCd0=";
   };
   installPhase = ''
     mkdir -p $out/bin
