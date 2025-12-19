@@ -19,4 +19,5 @@
     gro_ldist
     recv_dist
     napi_dist;
+  coremark = pkgs.callPackage ./pkgs/coremark-pro/coremark-pro.nix { };
 }
