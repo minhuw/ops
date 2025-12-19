@@ -20,4 +20,5 @@
     recv_dist
     napi_dist;
   coremark = pkgs.callPackage ./pkgs/coremark-pro/coremark-pro.nix { };
+  core-to-core-latency = pkgs.callPackage ./pkgs/core-to-core-latency.nix { };
 }
